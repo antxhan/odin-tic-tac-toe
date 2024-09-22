@@ -2,6 +2,7 @@
 
 to-do
 
+- [ ] feat: dark mode button
 - [ ] feat: modals for setting and how-to buttons
 - [ ] fix: make input autofocus when entering player names
 - [ ] refactor: change main menu to a <menu> tag

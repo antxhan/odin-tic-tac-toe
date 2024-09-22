@@ -60,7 +60,41 @@ class View {
       <path d="M12 19l0 .01" />
     </svg>
     `;
+    const dialog = document.querySelector(".help-dialog");
+
+    // "Show the dialog" button opens the dialog modally
+    helpButton.addEventListener("click", () => {
+      dialog.showModal();
+    });
+
+    // "Close" button closes the dialog
+    const closeButton = document.querySelector(".help-dialog-close-button");
+    closeButton.addEventListener("click", () => {
+      dialog.close();
+    });
     return helpButton;
+  }
+  createHelpDialog() {
+    const dialog = document.createElement("dialog");
+    dialog.className = "help-dialog";
+    dialog.innerHTML = `
+    <h2>How to play</h2>
+    <ol>
+      <li><b>Objective:</b> Be the first to get three of your marks (X or O) in a row, either horizontally, vertically, or diagonally.</li>
+      <li><b>Player Turns:</b> The game is played between two players. One player uses X, and the other uses O. Players take turns placing their mark in an empty square on the 3x3 grid.</li>
+      <li><b>Taking a Turn:</b> Click on any empty square to place your mark. Once placed, it cannot be moved.</li>
+      <li><b>Winning the Game:</b> You win if you place three of your marks in a row (horizontally, vertically, or diagonally).</li>
+      <li><b>Game End:</b>
+        <ul>
+        <li>If a player gets three in a row, they win!</li>
+        <li>If all 9 squares are filled and no player has three in a row, the game ends in a draw.</li>
+        </ul>
+      </li>
+      <li><b>Restarting the Game:</b> Once the game ends, you can click "Next Round" to play again.</li>
+    </ol>
+    <button class="help-dialog-close-button">Close</button>
+    `;
+    return dialog;
   }
   createSettingsButton() {
     const settingsButton = document.createElement("button");
@@ -83,7 +117,48 @@ class View {
       <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
     </svg>
     `;
+
+    const dialog = document.querySelector(".settings-dialog");
+
+    // "Show the dialog" button opens the dialog modally
+    settingsButton.addEventListener("click", () => {
+      dialog.showModal();
+    });
+
+    // "Close" button closes the dialog
+    const closeButton = document.querySelector(".settings-dialog-close-button");
+    closeButton.addEventListener("click", () => {
+      dialog.close();
+    });
+
     return settingsButton;
+  }
+  createSettingsDialog() {
+    const dialog = document.createElement("dialog");
+    dialog.className = "settings-dialog";
+    const title = document.createElement("h2");
+    title.textContent = "Settings";
+    const list = document.createElement("ul");
+    const darkModeButton = this.createDarkModeButton();
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "Close";
+    closeButton.className = "settings-dialog-close-button";
+    list.appendChild(darkModeButton);
+    dialog.appendChild(title);
+    dialog.appendChild(list);
+    dialog.appendChild(closeButton);
+    return dialog;
+  }
+  createDarkModeButton() {
+    const button = document.createElement("button");
+    button.className = "dark-mode-button";
+    button.value = false;
+    button.textContent = "Toggle Dark Mode";
+    button.disabled = true;
+    button.addEventListener("click", () => {
+      console.log("darkmode");
+    });
+    return button;
   }
   createPlayer(name, score) {
     const player = document.createElement("div");
@@ -133,7 +208,11 @@ class View {
     // creating extra buttons
     const extraButtonsContainer = document.createElement("div");
     extraButtonsContainer.className = "extra-buttons";
+    const helpDialog = this.createHelpDialog();
+    this.mainContainer.appendChild(helpDialog);
     const helpButton = this.createHelpButton();
+    const settingsDialog = this.createSettingsDialog();
+    this.mainContainer.appendChild(settingsDialog);
     const settingsButton = this.createSettingsButton();
     extraButtonsContainer.appendChild(helpButton);
     extraButtonsContainer.appendChild(settingsButton);
@@ -289,7 +368,6 @@ class View {
       } else {
         markerSVG = "";
       }
-      // cellDiv.append(cell);
       cellDiv.innerHTML = markerSVG;
       cellDiv.dataset.index = index;
       cellDiv.addEventListener("click", (e) => app.game.handleSquare(e));
@@ -312,7 +390,12 @@ class View {
     // extra buttons
     const extraButtons = document.createElement("div");
     extraButtons.className = "grid__extra-buttons";
+
+    const helpDialog = this.createHelpDialog();
+    this.mainContainer.appendChild(helpDialog);
     const helpButton = this.createHelpButton();
+    const settingsDialog = this.createSettingsDialog();
+    this.mainContainer.appendChild(settingsDialog);
     const settingsButton = this.createSettingsButton();
     extraButtons.appendChild(helpButton);
     extraButtons.appendChild(settingsButton);
@@ -478,8 +561,8 @@ class App {
   constructor() {
     this.view = new View();
     this.game = new Game();
-    // this.view.renderMainMenu();
-    this.view.renderEnterPlayers("Player 2");
+    this.view.renderMainMenu();
+    // this.view.renderEnterPlayers("Player 2");
     // this.view.renderGame();
   }
 }
